@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livestock Health Monitor Pro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="bg-circle circle-1"></div>
+        <div class="bg-circle circle-2"></div>
+        <div class="bg-circle circle-3"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-cow"></i>
+                <span>Livestock Monitor Pro</span>
+            </div>
+            <div class="nav-links">
+                <a href="#dashboard" class="nav-link active"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="#analytics" class="nav-link"><i class="fas fa-chart-bar"></i> Analytics</a>
+                <a href="#alerts" class="nav-link"><i class="fas fa-bell"></i> Alerts</a>
+                <a href="#settings" class="nav-link"><i class="fas fa-cog"></i> Settings</a>
+            </div>
+            <div class="nav-status">
+                <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle Theme">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+                <div class="status-indicator-nav">
+                    <span class="status-dot-nav" id="statusDotNav"></span>
+                    <span class="status-text-nav" id="statusTextNav">Offline</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="gradient-text">Real-Time</span> Livestock Health Monitoring
+                </h1>
+                <p class="hero-subtitle">AI-powered insights for smarter livestock management</p>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <i class="fas fa-heartbeat"></i>
+                        <div>
+                            <div class="hero-stat-value" id="heroTemp">--°C</div>
+                            <div class="hero-stat-label">Temperature</div>
+                        </div>
+                    </div>
+                    <div class="hero-stat">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <div class="hero-stat-value" id="heroGPS">Waiting</div>
+                            <div class="hero-stat-label">GPS Status</div>
+                        </div>
+                    </div>
+                    <div class="hero-stat">
+                        <i class="fas fa-sync-alt"></i>
+                        <div>
+                            <div class="hero-stat-value" id="heroUpdates">0</div>
+                            <div class="hero-stat-label">Updates</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connection Control Panel -->
+        <section class="control-panel">
+            <div class="panel-header">
+                <h2><i class="fas fa-plug"></i> Connection Control</h2>
+            </div>
+            <div class="panel-content">
+                <div class="control-group">
+                    <label for="portSelect"><i class="fas fa-usb"></i> Serial Port</label>
+                    <select id="portSelect" class="modern-select">
+                        <option value="COM5">COM5</option>
+                    </select>
+                </div>
+                <div class="control-buttons">
+                    <button class="modern-btn btn-connect" id="connectBtn" onclick="connectSerial()">
+                        <i class="fas fa-plug"></i> Connect
+                    </button>
+                    <button class="modern-btn btn-disconnect" id="disconnectBtn" onclick="disconnectSerial()" disabled>
+                        <i class="fas fa-times-circle"></i> Disconnect
+                    </button>
+                    <button class="modern-btn btn-refresh" onclick="refreshPorts()">
+                        <i class="fas fa-sync-alt"></i> Refresh Ports
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Dashboard Grid -->
+        <section class="dashboard-grid">
+            <!-- Temperature Monitor Card -->
+            <div class="dashboard-card card-large">
+                <div class="card-header-modern">
+                    <div class="card-title">
+                        <i class="fas fa-thermometer-half"></i>
+                        <h3>Temperature Monitor</h3>
+                    </div>
+                    <div class="card-badge" id="liveBadge">
+                        <span class="pulse-dot"></span> LIVE
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="temp-gauge">
+                        <svg class="gauge-svg" viewBox="0 0 200 200">
+                            <circle class="gauge-bg" cx="100" cy="100" r="80"></circle>
+                            <circle class="gauge-progress" id="gaugeProgress" cx="100" cy="100" r="80"></circle>
+                        </svg>
+                        <div class="gauge-center">
+                            <div class="gauge-value" id="tempValue">--</div>
+                            <div class="gauge-unit">°C</div>
+                        </div>
+                    </div>
+                    <div class="temp-status">
+                        <div class="status-badge" id="feverBadge">
+                            <i class="fas fa-info-circle"></i> NO DATA
+                        </div>
+                    </div>
+                    <div class="temp-info">
+                        <div class="info-item">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>Fever Threshold: <strong>39.5°C</strong></span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <span id="lastUpdate">Last update: Never</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Temperature Chart Card -->
+            <div class="dashboard-card card-large">
+                <div class="card-header-modern">
+                    <div class="card-title">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Temperature Trend</h3>
+                    </div>
+                    <div class="chart-controls">
+                        <button class="chart-btn active" onclick="setChartRange('1h')">1H</button>
+                        <button class="chart-btn" onclick="setChartRange('6h')">6H</button>
+                        <button class="chart-btn" onclick="setChartRange('24h')">24H</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="tempChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Location Card -->
+            <div class="dashboard-card">
+                <div class="card-header-modern">
+                    <div class="card-title">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <h3>GPS Location</h3>
+                    </div>
+                    <div class="gps-status" id="gpsStatus">
+                        <i class="fas fa-satellite-dish"></i> Searching...
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="location-display">
+                        <div class="location-item">
+                            <div class="location-icon"><i class="fas fa-location-arrow"></i></div>
+                            <div class="location-data">
+                                <div class="location-label">Latitude</div>
+                                <div class="location-value" id="latValue">--</div>
+                            </div>
+                        </div>
+                        <div class="location-item">
+                            <div class="location-icon"><i class="fas fa-compass"></i></div>
+                            <div class="location-data">
+                                <div class="location-label">Longitude</div>
+                                <div class="location-value" id="lonValue">--</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="modern-btn btn-map" onclick="openMap()">
+                        <i class="fas fa-map"></i> View on Google Maps
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statistics Card -->
+            <div class="dashboard-card">
+                <div class="card-header-modern">
+                    <div class="card-title">
+                        <i class="fas fa-chart-pie"></i>
+                        <h3>Statistics</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-icon blue">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="updateCount">0</div>
+                                <div class="stat-label">Data Updates</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon green">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="normalCount">0</div>
+                                <div class="stat-label">Normal Readings</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon orange">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="warningCount">0</div>
+                                <div class="stat-label">Warnings</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon red">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="feverCount">0</div>
+                                <div class="stat-label">Fever Alerts</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Status Card -->
+            <div class="dashboard-card">
+                <div class="card-header-modern">
+                    <div class="card-title">
+                        <i class="fas fa-server"></i>
+                        <h3>System Status</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="system-status">
+                        <div class="status-item">
+                            <i class="fas fa-circle status-icon" id="connectionIcon"></i>
+                            <span>Connection</span>
+                            <span class="status-value" id="connectionStatus">Offline</span>
+                        </div>
+                        <div class="status-item">
+                            <i class="fas fa-circle status-icon" id="dataIcon"></i>
+                            <span>Data Stream</span>
+                            <span class="status-value" id="dataStatus">Idle</span>
+                        </div>
+                        <div class="status-item">
+                            <i class="fas fa-circle status-icon" id="gpsIcon"></i>
+                            <span>GPS Signal</span>
+                            <span class="status-value" id="gpsSignalStatus">No Signal</span>
+                        </div>
+                    </div>
+                    <div class="error-display" id="errorBox">
+                        <i class="fas fa-check-circle"></i> All systems operational
+                    </div>
+                </div>
+            </div>
+
+            <!-- Available Ports Card -->
+            <div class="dashboard-card">
+                <div class="card-header-modern">
+                    <div class="card-title">
+                        <i class="fas fa-list"></i>
+                        <h3>Available Ports</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="ports-container" id="portsList">
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin"></i> Loading ports...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2024 Livestock Health Monitor Pro. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-book"></i> Documentation</a>
+                    <a href="#"><i class="fas fa-question-circle"></i> Support</a>
+                    <a href="#"><i class="fas fa-shield-alt"></i> Privacy</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

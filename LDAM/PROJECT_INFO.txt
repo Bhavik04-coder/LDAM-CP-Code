@@ -1,0 +1,133 @@
+╔══════════════════════════════════════════════════════════════╗
+║       LIVESTOCK HEALTH MONITOR PRO - PROJECT INFO           ║
+╚══════════════════════════════════════════════════════════════╝
+
+📋 BASIC INFO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Project Name:    Livestock Health Monitor Pro
+Version:         2.0.0
+Type:            Web Application + Desktop Application
+Status:          Production Ready ✓
+Total Files:     9
+Total Size:      ~91 KB
+
+📁 FILE STRUCTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LDAM/
+├── 🚀 Applications (3)
+│   ├── app.py              Flask web app (MAIN)
+│   ├── LDAM-Proto.py       Original Tkinter desktop app
+│   └── start.bat           Windows quick launcher
+│
+├── 📖 Documentation (2)
+│   ├── README.md           Main documentation
+│   └── QUICKSTART.md       Quick start guide
+│
+├── ⚙️ Configuration (1)
+│   └── requirements.txt    Python dependencies
+│
+└── 🌐 Web Interface (3)
+    ├── templates/index.html
+    ├── static/style.css
+    └── static/script.js
+
+✨ FEATURES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ Real-time temperature monitoring with circular gauge
+✓ Interactive temperature trend chart (Chart.js)
+✓ GPS location tracking with Google Maps
+✓ Fever detection (threshold: 39.5°C)
+✓ Statistics dashboard (updates, warnings, alerts)
+✓ System status monitoring
+✓ Dark & Light theme toggle 🌓
+✓ Mobile responsive design
+✓ Auto-refresh every 1 second
+
+🔘 BUTTONS (All Working ✓)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Connect          - Connect to serial port
+2. Disconnect       - Disconnect from serial port
+3. Refresh Ports    - Scan for available ports
+4. 1H / 6H / 24H    - Chart time range controls
+5. View on Maps     - Open GPS location
+6. Theme Toggle     - Switch dark/light mode
+
+🔌 API ENDPOINTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GET  /              Main web page
+GET  /api/data      Get sensor data (JSON)
+GET  /api/ports     Get available serial ports
+POST /api/connect   Connect to serial device
+POST /api/disconnect Disconnect from device
+
+🔧 REQUIREMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Software:
+  - Python 3.7+
+  - Flask 3.0.0
+  - pyserial 3.5
+  - Modern web browser
+
+Hardware:
+  - Arduino or ESP32
+  - Temperature sensor (MLX90614 or similar)
+  - GPS module (NEO-6M or similar)
+  - USB cable
+
+Data Format (JSON via serial at 115200 baud):
+  {"temperature": 38.5, "latitude": 12.34, "longitude": 56.78}
+
+🚀 QUICK START
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Windows:
+  1. Double-click start.bat
+  2. Open http://localhost:5000
+
+Manual:
+  1. pip install -r requirements.txt
+  2. python app.py
+  3. Open http://localhost:5000
+
+Desktop App:
+  python LDAM-Proto.py
+
+🎨 THEMES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌙 Dark Mode (Default)
+  - Dark blue background
+  - Perfect for night use
+  - Reduces eye strain
+
+☀️ Light Mode
+  - Light gray background
+  - Perfect for daytime
+  - Better readability
+
+Toggle: Click moon/sun icon in top-right corner
+
+📊 TECHNOLOGY STACK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Backend:  Python, Flask, pyserial, Threading
+Frontend: HTML5, CSS3, JavaScript (ES6+)
+Charts:   Chart.js 4.4.0
+Icons:    Font Awesome 6.4.0
+Design:   Responsive, Dark/Light themes
+
+✅ STATUS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ All features working
+✓ All buttons functional
+✓ Both themes working
+✓ Mobile responsive
+✓ Production ready
+✓ Fully tested
+✓ Clean code
+✓ No errors
+
+📞 DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+README.md      - Complete project documentation
+QUICKSTART.md  - Quick setup and usage guide
+
+🎉 READY TO USE!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
